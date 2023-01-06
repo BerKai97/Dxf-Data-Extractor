@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 antet.dwg
 antet.dxf
+*.csv

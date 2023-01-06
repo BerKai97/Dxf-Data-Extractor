@@ -35,31 +35,34 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("DXF Asset Counter", "DXF Asset Counter"))
-        self.pushButton.setText(_translate("MainWindow", "DXF Dosyası Seç"))
+        self.pushButton.setText(_translate("MainWindow", "Select DXF File"))
         
-        self.statusLabel.setText(_translate("MainWindow", "Durum: Dosya seçilmedi."))
+        self.statusLabel.setText(_translate("MainWindow", "Status: Idle"))
 
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         
-        fileName, _ = QFileDialog.getOpenFileName(None,"DXF Dosyası Seç", "","DXF Files (*.dxf)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(None,"Select a DXF File", "","DXF Files (*.dxf)", options=options)
         if fileName:
             print(fileName)
             self.count_assets(fileName)
 
     def count_assets(self, file_path):
   
-        self.statusLabel.setText("Durum: İşlem yapılıyor...")
+        self.statusLabel.setText("Status: Processing... Please wait, this may take a while.")
+        self.statusLabel.setStyleSheet("QLabel { color : blue; }")
         QtWidgets.QApplication.processEvents()
 
         ac = AssetCounter(file_path)
         result = ac.count_assets()
         if result == True:
-            self.statusLabel.setText("Durum: İşlem başarılı.")
+            self.statusLabel.setText("Status: Process completed. See csv file")
+            self.statusLabel.setStyleSheet("QLabel { color : green; }")
         else:
-            self.statusLabel.setText("Durum: İşlem başarısız.")
+            self.statusLabel.setText("Status: Process failed.")
+            self.statusLabel.setStyleSheet("QLabel { color : red; }")
 
 if __name__ == "__main__":
     import sys

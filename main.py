@@ -1,5 +1,6 @@
 import ezdxf
 import pandas as pd
+import os
 
 class AssetCounter:
     def __init__(self, file_path):
@@ -23,10 +24,18 @@ class AssetCounter:
             
             df = pd.DataFrame(list(asset_counts.items()), columns=['Asset', 'Count'])
             df.to_csv(f'{self.file_path}_asset_counts.csv', index=False)
+
+            try:
+                # os.startfile(f'{self.file_path}_asset_counts.csv')
+                os.startfile(os.path.dirname(self.file_path))
+            except Exception as e:
+                # print(e)
+                pass
             return True
 
+
         except Exception as e:
-            print(e)
+            # print(e)
             return False
 
 
