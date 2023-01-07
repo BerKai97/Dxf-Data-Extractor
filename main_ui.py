@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
-from main import AssetCounter
+from main import DDE
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -12,18 +12,25 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(100, 10, 150, 25))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton.clicked.connect(self.openFileNameDialog)
+        self.button_selectFile = QtWidgets.QPushButton(self.centralwidget)
+        self.button_selectFile.setGeometry(QtCore.QRect(100, 10, 150, 25))
+        self.button_selectFile.setObjectName("pushButton")
+        self.button_selectFile.clicked.connect(self.openFileNameDialog)
+
+
+        self.button_start = QtWidgets.QPushButton(self.centralwidget)
+        self.button_start.setGeometry(QtCore.QRect(100, 10, 150, 25))
+        self.button_start.setObjectName("startButton")
+        self.button_start.clicked.connect(lambda: self.count_assets(self.file_path))
+
 
         self.statusLabel = QtWidgets.QLabel(self.centralwidget)
         self.statusLabel.setGeometry(QtCore.QRect(100, 50, 150, 25))
         self.statusLabel.setObjectName("statusLabel")
 
-        # put everything in a vertical layout
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addWidget(self.button_selectFile)
+        self.verticalLayout.addWidget(self.button_start)
         self.verticalLayout.addWidget(self.statusLabel)
        
         MainWindow.setCentralWidget(self.centralwidget)
@@ -35,7 +42,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("DXF Asset Counter", "DXF Asset Counter"))
-        self.pushButton.setText(_translate("MainWindow", "Select DXF File"))
+        self.button_selectFile.setText(_translate("MainWindow", "Select DXF File"))
+        self.button_start.setText(_translate("MainWindow", "Start"))
         
         self.statusLabel.setText(_translate("MainWindow", "Status: Idle"))
 
@@ -46,8 +54,11 @@ class Ui_MainWindow(object):
         
         fileName, _ = QFileDialog.getOpenFileName(None,"Select a DXF File", "","DXF Files (*.dxf)", options=options)
         if fileName:
+            self.file_path = fileName
             print(fileName)
-            self.count_assets(fileName)
+            self.button_start.setEnabled(True)
+        
+            # self.count_assets(fileName)
 
     def count_assets(self, file_path):
   
@@ -55,7 +66,7 @@ class Ui_MainWindow(object):
         self.statusLabel.setStyleSheet("QLabel { color : blue; }")
         QtWidgets.QApplication.processEvents()
 
-        ac = AssetCounter(file_path)
+        ac = DDE(file_path)
         result = ac.count_assets()
         if result == True:
             self.statusLabel.setText("Status: Process completed. See csv file")

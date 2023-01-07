@@ -2,7 +2,7 @@ import ezdxf
 import pandas as pd
 import os
 
-class AssetCounter:
+class DDE:
     def __init__(self, file_path):
         self.file_path = file_path
         self.doc = ezdxf.readfile(file_path)
