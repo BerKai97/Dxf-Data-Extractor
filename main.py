@@ -1,7 +1,6 @@
 import ezdxf
 import pandas as pd
 import csv
-import os
 
 class DDE:
     def __init__(self, file_path):
@@ -23,14 +22,6 @@ class DDE:
             # pandas <3
             df = pd.DataFrame(list(self.asset_counts.items()), columns=['Asset', 'Count'])
             df.to_csv(f'{self.file_path}_asset_counts.csv', index=False)
-
-            # csv writer (pandas is better)
-            # with open(f'{self.file_path}_asset_counts.csv', 'w', newline='') as csvfile:
-            #     fieldnames = ['Asset', 'Count']
-            #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            #     writer.writeheader()
-            #     for asset_name, count in self.asset_counts.items():
-            #         writer.writerow({'Asset': asset_name, 'Count': count})
 
             # try:
             #     os.startfile(os.path.dirname(self.file_path))
@@ -57,6 +48,23 @@ class DDE:
             if asset_name in self.asset_counts:
                 cost += float(asset_price) * self.asset_counts[asset_name]
             
+        # Sometimes the asset name in the csv file is different from the one in the dxf file,
+        # because of this, we need to check if the asset name is in the price file
+        # and report that to the user
+        for asset_name in self.asset_counts:
+            if asset_name not in reader.fieldnames:
+                not_found.append(asset_name)
+
+        # Exporting cost and not found list to a text file
+        with open(f'{self.file_path}_cost.txt', 'w') as f:
+            f.write(f'Cost: {cost}\n')
+            f.write('Not found:\n')
+            for asset_name in not_found:
+                f.write(f'{asset_name}\n')
+
+
+        
+
 
         csvfile.close()
 

@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
-
+from messages import Messages, Message, Language
 
 class QuestionWidget(QWidget):
 
@@ -14,11 +14,13 @@ class QuestionWidget(QWidget):
 
         box = QMessageBox()
         box.setIcon(QMessageBox.Question)
-        box.setWindowTitle("Are you sure?")
+        box.setWindowTitle("")
         box.setText(msg)
         box.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
         buttonY = box.button(QMessageBox.Yes)
+        buttonY.setText(Messages().get(Message.YES))
         buttonN = box.button(QMessageBox.No)
+        buttonN.setText(Messages().get(Message.NO))
         box.exec_()
         if box.clickedButton() == buttonY:
             return True
