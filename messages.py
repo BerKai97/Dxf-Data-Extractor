@@ -22,6 +22,7 @@ class Message(Enum):
 class Messages:
     def __init__(self):
         self.current_language = Language.TR
+
         self.messages = {
             Language.EN: {
                 Message.SELECT_CSV_FILE: 'Select Price CSV File',
@@ -61,7 +62,7 @@ class Messages:
         return self.messages[self.current_language][message]
 
     def set_language(self, language):
-        self.current_language = language
-
-
-        
+        for land in Language:
+            if land.value == language:
+                self.current_language = land
+                return
